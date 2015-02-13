@@ -1,0 +1,120 @@
+{% extends 'layout.html.twig' %}
+
+{% block content %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>
+                    <div class="dropdown">
+                        <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                            {% if request.query.manufacturer %}
+                                {{ request.query.manufacturer }}
+                            {% else %}
+                                Manufacturer
+                            {% endif %}
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="/list">All</a></li>
+                            <li role="presentation" class="divider"></li>
+                            {% for manufacturer in manufacturers %}
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/list/?manufacturer={{ manufacturer|escape('url') }}">{{ manufacturer }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </th>
+                <th>
+                    {% if request.query.manufacturer %}
+                        <div class="dropdown">
+                            <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="/page.html">
+                                {% if request.query.model %}
+                                    {{ request.query.model }}
+                                {% else %}
+                                    Model
+                                {% endif %}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="/list/?manufacturer={{ request.query.manufacturer|escape('url') }}">All</a></li>
+                                <li role="presentation" class="divider"></li>
+                                {% for model in models %}
+                                    <li role="presentation"><a role="menuitem" tabindex="-1" href="/list/?manufacturer={{ request.query.manufacturer|escape('url') }}&model={{ model|escape('url') }}">{{ model }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% else %}
+                        Model
+                    {% endif %}
+                </th>
+                <th>Price</th>
+                <th>Year</th>
+                <th>Run</th>
+                <th>
+                    Weight
+                </th>
+                <th></th>
+                <th>
+                    <a href="/weight" class="btn btn-default btn-sm glyphicon glyphicon-refresh" role="button"></a>
+                    <a href="/import" class="btn btn-default btn-sm glyphicon glyphicon-save" role="button"></a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ car.manufacturer }}</td>
+                    <td>{{ car.model }}</td>
+                    <td>$ {{ car.price|number_format }}</td>
+                    <td>{{ car.year }}</td>
+                    <td>{{ car.run|number_format }} km</td>
+                    <td>
+                        <a href="#" data-toggle="tooltip" data-placement="right" title="{% spaceless %}
+                            {% for field, weight in car.weightComponents %}
+                                {{ field }}[{{ weight|number_format(2, '.', ',') }}] {% if not loop.last %},{% endif %}
+                            {% endfor %}
+                        {% endspaceless %}"> {{ car.weight|number_format(2, '.', ',') }}</a>
+                    </td>
+                    <td>
+                        {% if car.mark.isChecked %}
+                            <a href="/uncheck/{{ car.id }}" class="btn btn-success glyphicon glyphicon-ok btn-sm" role="button"></a>
+                        {% else %}
+                            <a href="/check/{{ car.id }}" class="btn btn-default glyphicon glyphicon-ok btn-sm" role="button"></a>
+                        {% endif %}
+
+                        <a href="{{ car.url }}" target="_blank" class="btn btn-default glyphicon glyphicon-eye-open btn-sm" role="button"></a>
+                    </td>
+                    <td>
+
+                        <div class="btn-group btn-group-sm">
+                            <a href="/up/{{ car.id }}" class="btn btn-default glyphicon glyphicon-chevron-up" role="button"></a>
+                            <a href="#" class="btn btn-default glyphicon disabled" role="button">
+                                {% if car.mark.votes %}
+                                    {{ car.mark.votes }}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </a>
+                            <a href="/down/{{ car.id }}" class="btn btn-default glyphicon glyphicon-chevron-down" role="button"></a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block javascript %}
+    <script type="text/javascript">
+        $(function() {
+            $('.btn').not('[target=_blank]').click(function(event) {
+                event.preventDefault();
+                $('.btn').addClass('disabled');
+                $('.container').load($(this).attr('href'));
+            });
+
+            $('[data-toggle=tooltip]').tooltip();
+        });
+    </script>
+{% endblock %}

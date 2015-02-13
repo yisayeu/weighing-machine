@@ -1,0 +1,5 @@
+{% if request.xhr %}
+    {% extends 'layout.xhr.html.twig' %}
+{% else %}
+    {% extends 'layout.default.html.twig' %}
+{% endif %}

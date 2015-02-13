@@ -1,0 +1,18 @@
+{
+    "name": "car-selector",
+    "version": "0.1.0",
+    "description": "car-selector",
+    "main": "main.js",
+    "dependencies": {
+        "crawler": "*",
+        "convict": "*",
+        "mongoose": "*",
+        "express": "*",
+        "twig": "*",
+        "underscore": "*",
+        "underscore.string": "*",
+        "moment": "*",
+        "multimeter": "*",
+        "node-gearman": "*"
+    }
+}

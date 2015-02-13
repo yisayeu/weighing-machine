@@ -1,0 +1,23 @@
+{
+    "app": {
+        "controllers": {
+            "Core":  "src/core/controller/"
+        }
+    },
+    "odm": {
+        "managers": {
+            "main": {
+                "connection": {
+                    "uri": "mongodb://localhost/car_selector"
+                },
+                "models": {
+                    "Core": "src/core/model/"
+                },
+                "managers": {
+                    "Core": "src/core/manager/"
+                }
+
+            }
+        }
+    }
+}
